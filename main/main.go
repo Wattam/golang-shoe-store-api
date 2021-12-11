@@ -13,8 +13,10 @@ import (
 
 func main() {
 
+	// Initializing the connection with the database
 	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
 
+	// Verifying if the database connection was a success
 	if err != nil {
 		panic(err.Error())
 	} else {
@@ -23,8 +25,10 @@ func main() {
 
 	store := shoe.New(db)
 
+	// Creates a instance of the Gin Web Framework
 	r := gin.Default()
 
+	// REST API functions
 	r.GET("/get", handler.ShoeGetAll(store))
 	r.GET("/:id", handler.ShoeGet(store))
 	r.POST("/post", handler.ShoeAdd(store))

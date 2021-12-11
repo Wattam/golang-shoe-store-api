@@ -63,7 +63,7 @@ func New(db *sql.DB) *Inventory {
 	}
 }
 
-// Gets all shoes from the inventory
+// Gets all shoes from the database
 func (i *Inventory) GetAll() []Shoe {
 	rows, _ := i.DB.Query(`
 		SELECT *
@@ -81,7 +81,7 @@ func (i *Inventory) GetAll() []Shoe {
 	return shoes
 }
 
-// Gets a specific shoe from the inventory using a ID
+// Gets a specific shoe from the database using a ID
 func (i *Inventory) GetShoe(id uint) Shoe {
 	row, _ := i.DB.Query(`
 		SELECT *
@@ -97,7 +97,7 @@ func (i *Inventory) GetShoe(id uint) Shoe {
 	return shoe
 }
 
-// Adds a shoe to the inventory
+// Adds a shoe to the database
 func (i *Inventory) AddShoe(shoe Shoe) {
 
 	i.DB.Exec(`
@@ -106,7 +106,7 @@ func (i *Inventory) AddShoe(shoe Shoe) {
 	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price)
 }
 
-// Updates a specific shoe from the inventory using a ID
+// Updates a specific shoe from the database using a ID
 func (i *Inventory) UpdateShoe(shoe Shoe) {
 	i.DB.Exec(`
 		UPDATE shoe
@@ -115,7 +115,7 @@ func (i *Inventory) UpdateShoe(shoe Shoe) {
 	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price, shoe.ID)
 }
 
-// Deletes a specific shoe from the inventory using a ID
+// Deletes a specific shoe from the database using a ID
 func (i *Inventory) DeleteShoe(id uint) {
 	i.DB.Query(`
 		DELETE FROM shoe
