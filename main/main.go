@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	"github.com/wattam/shoeStoreDB/gopostgres/dbconfig"
+	dbconfig "github.com/wattam/shoeStoreDB/gopostgres"
 	"github.com/wattam/shoeStoreDB/handler"
 	shoe "github.com/wattam/shoeStoreDB/models"
 )
