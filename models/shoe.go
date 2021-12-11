@@ -115,14 +115,10 @@ func (i *Inventory) UpdateShoe(shoe Shoe) {
 	`, shoe.Name, shoe.Style, shoe.Color, shoe.Material, shoe.Price, shoe.ID)
 }
 
-/*
 // Deletes a specific shoe from the inventory using a ID
 func (i *Inventory) DeleteShoe(id uint) {
-	for index, item := range i.Shoes {
-		if id == item.ID {
-			i.Shoes = append(i.Shoes[:index], i.Shoes[index+1:]...)
-			break
-		}
-	}
+	i.DB.Query(`
+		DELETE FROM shoe
+		WHERE id=$1
+	`, id)
 }
-*/
