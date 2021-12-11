@@ -21,7 +21,7 @@ type Inventory struct {
 //Interfaces
 // GetAll interface
 type AllGetter interface {
-	GetAll() *sql.DB
+	GetAll() []Shoe
 }
 
 // GetShoe interface
@@ -64,21 +64,38 @@ func New(db *sql.DB) *Inventory {
 }
 
 // Gets all shoes from the inventory
-func (i *Inventory) GetAll() *sql.DB {
-	return i.DB
+func (i *Inventory) GetAll() []Shoe {
+	rows, _ := i.DB.Query(`
+		SELECT *
+		FROM shoe
+	`)
+
+	shoes := []Shoe{}
+	shoe := Shoe{}
+
+	for rows.Next() {
+		rows.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Color, &shoe.Material, &shoe.Price)
+		shoes = append(shoes, shoe)
+	}
+
+	return shoes
 }
 
-/*
 // Gets a specific shoe from the inventory using a ID
 func (i *Inventory) GetShoe(id uint) Shoe {
-	for _, item := range i.Shoes {
-		if id == item.ID {
-			return item
-		}
+	row, _ := i.DB.Query(`
+		SELECT *
+		FROM shoe
+		WHERE id=$1
+	`, id)
+
+	shoe := Shoe{}
+	for row.Next() {
+		row.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Color, &shoe.Material, &shoe.Price)
 	}
-	return Shoe{ID: 0}
+
+	return shoe
 }
-*/
 
 // Adds a shoe to the inventory
 func (i *Inventory) AddShoe(shoe Shoe) {

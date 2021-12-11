@@ -10,8 +10,6 @@ import (
 func ShoeGetAll(store shoe.AllGetter) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
-		results := store.GetAll()
-
-		c.JSON(http.StatusOK, results)
+		c.JSON(http.StatusOK, store.GetAll())
 	}
 }

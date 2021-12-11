@@ -26,7 +26,7 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/get", handler.ShoeGetAll(store))
-	//r.GET("/:id", handler.ShoeGet(store))
+	r.GET("/:id", handler.ShoeGet(store))
 	r.POST("/post", handler.ShoeAdd(store))
 	r.PUT("/put", handler.ShoeUpdate(store))
 	//r.DELETE("/:id", handler.ShoeDelete(store))
