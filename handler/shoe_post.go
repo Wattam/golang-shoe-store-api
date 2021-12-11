@@ -12,7 +12,7 @@ type shoePostRequest struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	Style    string `json:"style"`
-	Color    string `json:"color"`
+	Colour   string `json:"colour"`
 	Material string `json:"material"`
 	Price    string `json:"price"`
 }
@@ -28,7 +28,7 @@ func ShoeAdd(store shoe.Adder) gin.HandlerFunc {
 			ID:       0,
 			Name:     request.Name,
 			Style:    request.Style,
-			Color:    request.Color,
+			Colour:   request.Colour,
 			Material: request.Material,
 			Price:    price_converted,
 		}

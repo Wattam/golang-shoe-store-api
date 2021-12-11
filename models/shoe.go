@@ -9,7 +9,7 @@ type Shoe struct {
 	ID       uint    `json:"id"`
 	Name     string  `json:"name"`
 	Style    string  `json:"style"`
-	Color    string  `json:"color"`
+	Colour   string  `json:"colour"`
 	Material string  `json:"material"`
 	Price    float64 `json:"price"`
 }
@@ -52,7 +52,7 @@ func New(db *sql.DB) *Inventory {
 				id SERIAL PRIMARY KEY,
 				name VARCHAR(255),
 		   		style VARCHAR(255),
-				color VARCHAR(255),
+				colour VARCHAR(255),
 				material VARCHAR(255),
 				price DOUBLE PRECISION
 			);
@@ -74,7 +74,7 @@ func (i *Inventory) GetAll() []Shoe {
 	shoe := Shoe{}
 
 	for rows.Next() {
-		rows.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Color, &shoe.Material, &shoe.Price)
+		rows.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Colour, &shoe.Material, &shoe.Price)
 		shoes = append(shoes, shoe)
 	}
 
@@ -91,7 +91,7 @@ func (i *Inventory) GetShoe(id uint) Shoe {
 
 	shoe := Shoe{}
 	for row.Next() {
-		row.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Color, &shoe.Material, &shoe.Price)
+		row.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Colour, &shoe.Material, &shoe.Price)
 	}
 
 	return shoe
@@ -101,18 +101,18 @@ func (i *Inventory) GetShoe(id uint) Shoe {
 func (i *Inventory) AddShoe(shoe Shoe) {
 
 	i.DB.Exec(`
-		INSERT INTO shoe (name, style, color, material, price)
+		INSERT INTO shoe (name, style, colour, material, price)
 		VALUES ($1, $2, $3, $4, $5);	
-	`, shoe.Name, shoe.Style, shoe.Color, shoe.Material, shoe.Price)
+	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price)
 }
 
 // Updates a specific shoe from the inventory using a ID
 func (i *Inventory) UpdateShoe(shoe Shoe) {
 	i.DB.Exec(`
 		UPDATE shoe
-		SET name = $1, style = $2, color = $3, material = $4, price = $5
+		SET name = $1, style = $2, colour = $3, material = $4, price = $5
 		WHERE id = $6;
-	`, shoe.Name, shoe.Style, shoe.Color, shoe.Material, shoe.Price, shoe.ID)
+	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price, shoe.ID)
 }
 
 // Deletes a specific shoe from the inventory using a ID

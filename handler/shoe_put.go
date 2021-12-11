@@ -20,7 +20,7 @@ func ShoeUpdate(store shoe.Updater) gin.HandlerFunc {
 			ID:       uint(id_converted),
 			Name:     request.Name,
 			Style:    request.Style,
-			Color:    request.Color,
+			Colour:   request.Colour,
 			Material: request.Material,
 			Price:    price_converted,
 		}
