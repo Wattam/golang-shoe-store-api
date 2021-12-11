@@ -22,7 +22,7 @@ func ShoeUpdate(store shoe.Updater) gin.HandlerFunc {
 			Style:    request.Style,
 			Color:    request.Color,
 			Material: request.Material,
-			Price:    float32(price_converted),
+			Price:    price_converted,
 		}
 
 		store.UpdateShoe(shoe)

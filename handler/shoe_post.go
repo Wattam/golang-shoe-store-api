@@ -23,15 +23,14 @@ func ShoeAdd(store shoe.Adder) gin.HandlerFunc {
 		request := shoePostRequest{}
 		c.Bind(&request)
 
-		id_converted, _ := strconv.Atoi(request.ID)
 		price_converted, _ := strconv.ParseFloat(request.Price, 64)
 		shoe := shoe.Shoe{
-			ID:       uint(id_converted),
+			ID:       0,
 			Name:     request.Name,
 			Style:    request.Style,
 			Color:    request.Color,
 			Material: request.Material,
-			Price:    float32(price_converted),
+			Price:    price_converted,
 		}
 
 		store.AddShoe(shoe)

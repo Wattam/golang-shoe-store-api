@@ -1,5 +1,9 @@
 package shoe
 
+import (
+	"database/sql"
+)
+
 // Data
 type Shoe struct {
 	ID       uint    `json:"id"`
@@ -7,17 +11,17 @@ type Shoe struct {
 	Style    string  `json:"style"`
 	Color    string  `json:"color"`
 	Material string  `json:"material"`
-	Price    float32 `json:"price"`
+	Price    float64 `json:"price"`
 }
 
 type Inventory struct {
-	Shoes []Shoe
+	DB *sql.DB
 }
 
 //Interfaces
 // GetAll interface
 type AllGetter interface {
-	GetAll() []Shoe
+	GetAll() *sql.DB
 }
 
 // GetShoe interface
@@ -42,17 +46,29 @@ type Deleter interface {
 
 // Functions
 // Creates a new shoe inventory
-func New() *Inventory {
+func New(db *sql.DB) *Inventory {
+
+	db.Exec(`CREATE TABLE IF NOT EXISTS shoe (
+				id SERIAL PRIMARY KEY,
+				name VARCHAR(255),
+		   		style VARCHAR(255),
+				color VARCHAR(255),
+				material VARCHAR(255),
+				price DOUBLE PRECISION
+			);
+	`)
+
 	return &Inventory{
-		Shoes: []Shoe{},
+		DB: db,
 	}
 }
 
 // Gets all shoes from the inventory
-func (i *Inventory) GetAll() []Shoe {
-	return i.Shoes
+func (i *Inventory) GetAll() *sql.DB {
+	return i.DB
 }
 
+/*
 // Gets a specific shoe from the inventory using a ID
 func (i *Inventory) GetShoe(id uint) Shoe {
 	for _, item := range i.Shoes {
@@ -62,22 +78,27 @@ func (i *Inventory) GetShoe(id uint) Shoe {
 	}
 	return Shoe{ID: 0}
 }
+*/
 
 // Adds a shoe to the inventory
 func (i *Inventory) AddShoe(shoe Shoe) {
-	i.Shoes = append(i.Shoes, shoe)
+
+	i.DB.Exec(`
+		INSERT INTO shoe (name, style, color, material, price)
+		VALUES ($1, $2, $3, $4, $5);	
+	`, shoe.Name, shoe.Style, shoe.Color, shoe.Material, shoe.Price)
 }
 
 // Updates a specific shoe from the inventory using a ID
 func (i *Inventory) UpdateShoe(shoe Shoe) {
-	for index, item := range i.Shoes {
-		if shoe.ID == item.ID {
-			i.Shoes[index] = shoe
-			break
-		}
-	}
+	i.DB.Exec(`
+		UPDATE shoe
+		SET name = $1, style = $2, color = $3, material = $4, price = $5
+		WHERE id = $6;
+	`, shoe.Name, shoe.Style, shoe.Color, shoe.Material, shoe.Price, shoe.ID)
 }
 
+/*
 // Deletes a specific shoe from the inventory using a ID
 func (i *Inventory) DeleteShoe(id uint) {
 	for index, item := range i.Shoes {
@@ -87,3 +108,4 @@ func (i *Inventory) DeleteShoe(id uint) {
 		}
 	}
 }
+*/
