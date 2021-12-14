@@ -1,12 +1,17 @@
-## REST API for a shoe store using Go and Gin Web Framework
+
+## REST API for a shoe store using Golang, GORM and Gin Web Framework
 
 This API uses a local PostgreSQL database that's set through the `/gopostgres/driverConfig.go` file.
 
 
 ### To run the project
-Once you are in the `/main` folder run the command:
+- Once you are in the `/main` folder run the command:
 ```
 $ go run main.go
+```
+- Or run directly the command:
+```
+$ go run main/main.go
 ```
 ---
 ### To get all the dependencies
@@ -14,13 +19,25 @@ $ go run main.go
 ```
 $ go get -u github.com/gin-gonic/gin
 ```
+- GORM (ORM library):
+```
+$ go get -u gorm.io/gorm
+```
 - Go Postgres driver:
 ```
 $ go get github.com/lib/pq
 ```
 ---
+### To syncronize all the dependencies
+```
+$ export GO111MODULE=on
+```
+```
+$ go mod tidy
+```
+---
 ### Packages
-- `package main`: database initialization the call for GET, POST, PUT and DELETE functions.
+- `package main`: database initialization and the calls for GET, POST, PUT and DELETE functions.
 - `package shoe`: data model for a shoe and the functions to get, add, update or delete it from the database.
 - `package dbconfig`: database parameters that will be used on it's initialization.
 - `package handler`: functions that will use Gin Web Framework to handle JSON activities.
@@ -33,6 +50,10 @@ $ go get github.com/lib/pq
 ```json
 [
 	{
+		"ID": 0,
+		"CreatedAt": "2021-12-14T15:05:48.071495-03:00",
+		"UpdatedAt": "2021-12-14T15:05:48.071495-03:00",
+		"DeletedAt": null,
 		"id": 1,
 		"name": "Shoe 1",
 		"style": "Style 1",
@@ -41,6 +62,10 @@ $ go get github.com/lib/pq
 		"price": 1
 	},
 	{
+		"ID": 0,
+		"CreatedAt": "2021-12-14T15:05:54.006881-03:00",
+		"UpdatedAt": "2021-12-14T15:05:54.006881-03:00",
+		"DeletedAt": null,
 		"id": 2,
 		"name": "Shoe 2",
 		"style": "Style 2",
@@ -57,6 +82,10 @@ $ go get github.com/lib/pq
 - Response example:
 ```json
 {
+	"ID": 0,
+	"CreatedAt": "2021-12-14T15:05:48.071495-03:00",
+	"UpdatedAt": "2021-12-14T15:05:48.071495-03:00",
+	"DeletedAt": null,
 	"id": 1,
 	"name": "Shoe 1",
 	"style": "Style 1",
