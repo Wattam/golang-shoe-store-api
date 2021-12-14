@@ -1,11 +1,14 @@
 package shoe
 
 import (
-	"database/sql"
+	"fmt"
+
+	"gorm.io/gorm"
 )
 
 // Data
 type Shoe struct {
+	gorm.Model
 	ID       uint    `json:"id"`
 	Name     string  `json:"name"`
 	Style    string  `json:"style"`
@@ -15,7 +18,7 @@ type Shoe struct {
 }
 
 type Inventory struct {
-	DB *sql.DB
+	GormDB *gorm.DB
 }
 
 //Interfaces
@@ -46,79 +49,45 @@ type Deleter interface {
 
 // Functions
 // Creates a new shoe inventory
-func New(db *sql.DB) *Inventory {
+func New(gormDB *gorm.DB) *Inventory {
 
-	db.Exec(`CREATE TABLE IF NOT EXISTS shoe (
-				id SERIAL PRIMARY KEY,
-				name VARCHAR(255),
-		   		style VARCHAR(255),
-				colour VARCHAR(255),
-				material VARCHAR(255),
-				price DOUBLE PRECISION
-			);
-	`)
+	gormDB.AutoMigrate(&Shoe{})
 
 	return &Inventory{
-		DB: db,
+		GormDB: gormDB,
 	}
 }
 
 // Gets all shoes from the database
 func (i *Inventory) GetAll() []Shoe {
-	rows, _ := i.DB.Query(`
-		SELECT *
-		FROM shoe
-	`)
 
 	shoes := []Shoe{}
-	shoe := Shoe{}
-
-	for rows.Next() {
-		rows.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Colour, &shoe.Material, &shoe.Price)
-		shoes = append(shoes, shoe)
-	}
+	i.GormDB.Find(&shoes)
 
 	return shoes
 }
 
 // Gets a specific shoe from the database using a ID
 func (i *Inventory) GetShoe(id uint) Shoe {
-	row, _ := i.DB.Query(`
-		SELECT *
-		FROM shoe
-		WHERE id=$1
-	`, id)
+	var shoe Shoe
+	i.GormDB.First(&shoe, id)
 
-	shoe := Shoe{}
-	for row.Next() {
-		row.Scan(&shoe.ID, &shoe.Name, &shoe.Style, &shoe.Colour, &shoe.Material, &shoe.Price)
-	}
-
+	fmt.Println(shoe)
 	return shoe
 }
 
 // Adds a shoe to the database
 func (i *Inventory) AddShoe(shoe Shoe) {
 
-	i.DB.Exec(`
-		INSERT INTO shoe (name, style, colour, material, price)
-		VALUES ($1, $2, $3, $4, $5);	
-	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price)
+	i.GormDB.Create(&shoe)
 }
 
 // Updates a specific shoe from the database using a ID
 func (i *Inventory) UpdateShoe(shoe Shoe) {
-	i.DB.Exec(`
-		UPDATE shoe
-		SET name = $1, style = $2, colour = $3, material = $4, price = $5
-		WHERE id = $6;
-	`, shoe.Name, shoe.Style, shoe.Colour, shoe.Material, shoe.Price, shoe.ID)
+	i.GormDB.Save(&shoe)
 }
 
 // Deletes a specific shoe from the database using a ID
 func (i *Inventory) DeleteShoe(id uint) {
-	i.DB.Query(`
-		DELETE FROM shoe
-		WHERE id=$1
-	`, id)
+	i.GormDB.Delete(&Shoe{}, id)
 }

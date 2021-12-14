@@ -9,6 +9,8 @@ import (
 	dbconfig "github.com/wattam/shoeStoreDB/gopostgres"
 	"github.com/wattam/shoeStoreDB/handler"
 	shoe "github.com/wattam/shoeStoreDB/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func main() {
@@ -16,14 +18,23 @@ func main() {
 	// Initializing the connection with the database
 	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
 
-	// Verifying if the database connection was a success
 	if err != nil {
 		panic(err.Error())
 	} else {
-		fmt.Println("Connected!")
+		fmt.Println("PostgreSQL database connected!")
 	}
 
-	store := shoe.New(db)
+	gormDB, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: db,
+	}))
+
+	if err != nil {
+		panic(err.Error())
+	} else {
+		fmt.Println("Gorm association with the database was successful!")
+	}
+
+	store := shoe.New(gormDB)
 
 	// Creates a instance of the Gin Web Framework
 	r := gin.Default()
