@@ -1,52 +1,29 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	dbconfig "github.com/wattam/shoeStoreDB/gopostgres"
-	"github.com/wattam/shoeStoreDB/handler"
-	shoe "github.com/wattam/shoeStoreDB/models"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/wattam/shoeStoreDB/database"
+	"github.com/wattam/shoeStoreDB/handlers/shoeHandlers"
 )
 
 func main() {
 
-	// Initializing the connection with the database
-	db, err := sql.Open(dbconfig.PostgresDriver, dbconfig.DataSourceName)
+	database.CreateDatabase()
 
-	if err != nil {
-		panic(err.Error())
-	} else {
-		fmt.Println("PostgreSQL database connected!")
-	}
-
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: db,
-	}))
-
-	if err != nil {
-		panic(err.Error())
-	} else {
-		fmt.Println("Gorm association with the database was successful!")
-	}
-
-	store := shoe.New(gormDB)
-
-	// Creates a instance of the Gin Web Framework
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	// REST API functions
-	r.GET("/get", handler.ShoeGetAll(store))
-	r.GET("/:id", handler.ShoeGet(store))
-	r.POST("/post", handler.ShoeAdd(store))
-	r.PUT("/put", handler.ShoeUpdate(store))
-	r.DELETE("/:id", handler.ShoeDelete(store))
+	shoes := r.Group("shoes")
+	{
+		shoes.GET("/get", shoeHandlers.GetAllShoes)
+		shoes.GET("/:id", shoeHandlers.GetShoe)
+		shoes.POST("/post", shoeHandlers.CreateShoe)
+		shoes.PUT("/put", shoeHandlers.EditShoe)
+		shoes.DELETE("/:id", shoeHandlers.DeleteShoe)
+	}
 
 	r.Run()
 
-	defer db.Close()
+	defer database.CloseConnection()
 }
