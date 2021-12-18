@@ -1,7 +1,6 @@
-
 ## REST API for a shoe store using Golang, GORM and Gin Web Framework
 
-This API uses a local PostgreSQL database that's set through the `/gopostgres/driverConfig.go` file.
+This API uses a local PostgreSQL database that's set through the `/database/databaseConfig.go` file.
 
 
 ### To run the project
@@ -37,67 +36,57 @@ $ go mod tidy
 ```
 ---
 ### Packages
-- `package main`: database initialization and the calls for GET, POST, PUT and DELETE functions.
-- `package shoe`: data model for a shoe and the functions to get, add, update or delete it from the database.
-- `package dbconfig`: database parameters that will be used on it's initialization.
-- `package handler`: functions that will use Gin Web Framework to handle JSON activities.
+- `package main`: router creation and calls for GET, POST, PUT and DELETE requests.
+- `package models`: data model for a shoe.
+- `package database`: database configuration and initialization.
+- `package shoeHandlers`: functions to perform HTTP requests.
 ---
-### API Authentication
-#### `GetAll Request`
+### API Requests
+#### `GetAllShoes Request`
 
-- `GET` `localhost:8080/get`: gets all shoes from the database.
+- `GET` `localhost:8080/shoes/get`: gets all shoes from the database.
 - Response example:
 ```json
 [
 	{
-		"ID": 0,
-		"CreatedAt": "2021-12-14T15:05:48.071495-03:00",
-		"UpdatedAt": "2021-12-14T15:05:48.071495-03:00",
-		"DeletedAt": null,
-		"id": 1,
-		"name": "Shoe 1",
+		"id": "1",
+		"name": "Name 1",
 		"style": "Style 1",
 		"colour": "Colour 1",
 		"material": "Material 1",
-		"price": 1
+		"price": "1"
 	},
 	{
-		"ID": 0,
-		"CreatedAt": "2021-12-14T15:05:54.006881-03:00",
-		"UpdatedAt": "2021-12-14T15:05:54.006881-03:00",
-		"DeletedAt": null,
-		"id": 2,
-		"name": "Shoe 2",
+		"id": "2",
+		"name": "Name 2",
 		"style": "Style 2",
 		"colour": "Colour 2",
 		"material": "Material 2",
-		"price": 2
+		"price": "2"
 	}
 ]
 ```
+
 ---
 #### `GetShoe Request`
 
-- `GET` `localhost:8080/:id`: gets a specific shoe from the database using the ID.
+- `GET` `localhost:8080/shoes/:id`: gets a specific shoe from the database using the ID.
 - Response example:
 ```json
 {
-	"ID": 0,
-	"CreatedAt": "2021-12-14T15:05:48.071495-03:00",
-	"UpdatedAt": "2021-12-14T15:05:48.071495-03:00",
-	"DeletedAt": null,
-	"id": 1,
-	"name": "Shoe 1",
+	"id": "1",
+	"name": "Name 1",
 	"style": "Style 1",
 	"colour": "Colour 1",
 	"material": "Material 1",
-	"price": 1
+	"price": "1"
 }
 ```
----
-#### `AddShoe Request`
 
-- `POST` `localhost:8080/post`: adds a shoe to the database passing the parameters through the body.
+---
+#### `CreateShoe Request`
+
+- `POST` `localhost:8080/shoes/post`: creates a shoe in the database passing the parameters through the body.
 - Body example:
 ```json
 {
@@ -108,10 +97,22 @@ $ go mod tidy
 	"price":"1"
 }
 ```
----
-#### `UpdateShoe Request`
+- Response example:
+```json
+{
+	"id": "1",
+	"name": "Name 1",
+	"style": "Style 1",
+	"colour": "Colour 1",
+	"material": "Material 1",
+	"price": "1"
+}
+```
 
-- `PUT` `localhost:8080/put`: updates a shoe from the database with the ID equal to the one passed on the body.
+---
+#### `EditShoe Request`
+
+- `PUT` `localhost:8080/shoes/put`: edits a shoe in the database with the ID equal to the one passed on the body.
 - Body example:
 ```json
 {
@@ -123,8 +124,20 @@ $ go mod tidy
 	"price":"1.1"
 }
 ```
+- Response example:
+```json
+{
+	"id": "1",
+	"name": "Shoe 1 updated",
+	"style": "Style 1 updated",
+	"colour": "Color 1 updated",
+	"material": "Material 1 updated",
+	"price": "1.1"
+}
+```
+
 ---
 #### `DeleteShoe Request`
 
-- `DELETE` `localhost:8080/:id`: deletes a specific shoe from the database using the ID.
+- `DELETE` `localhost:8080/shoes/:id`: deletes a shoe from the database using the ID.
 ---
