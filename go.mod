@@ -1,4 +1,4 @@
-module github.com/wattam/shoeStoreDB
+module github.com/wattam/shoe-store-API
 
 go 1.17
 

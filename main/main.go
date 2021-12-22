@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	"github.com/wattam/shoeStoreDB/database"
-	"github.com/wattam/shoeStoreDB/handlers/shoeHandlers"
+	"github.com/wattam/shoe-store-API/database"
+	"github.com/wattam/shoe-store-API/handlers/shoeHandlers"
 )
 
 func main() {

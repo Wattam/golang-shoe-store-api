@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
-	"github.com/wattam/shoeStoreDB/models"
+	"github.com/wattam/shoe-store-API/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
