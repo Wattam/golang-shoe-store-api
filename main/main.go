@@ -2,28 +2,27 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
-	"github.com/wattam/shoe-store-API/database"
-	"github.com/wattam/shoe-store-API/handlers/shoeHandlers"
+	"github.com/wattam/golang-shoe-store-api/database"
+	"github.com/wattam/golang-shoe-store-api/handlers/shoe_handlers"
 )
 
 func main() {
 
-	database.CreateDatabase()
+	database.ConnectDatabase()
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	shoes := r.Group("shoes")
 	{
-		shoes.GET("/get", shoeHandlers.GetAllShoes)
-		shoes.GET("/:id", shoeHandlers.GetShoe)
-		shoes.POST("/post", shoeHandlers.CreateShoe)
-		shoes.PUT("/put", shoeHandlers.EditShoe)
-		shoes.DELETE("/:id", shoeHandlers.DeleteShoe)
+		shoes.GET("/get", shoe_handlers.GetAll)
+		shoes.GET("/:id", shoe_handlers.Get)
+		shoes.POST("/post", shoe_handlers.Post)
+		shoes.PUT("/put", shoe_handlers.Put)
+		shoes.DELETE("/:id", shoe_handlers.Delete)
 	}
 
 	r.Run()
 
-	defer database.CloseConnection()
+	defer database.DisconnectDatabase()
 }

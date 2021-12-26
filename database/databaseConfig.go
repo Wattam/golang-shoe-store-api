@@ -3,29 +3,22 @@ package database
 import (
 	"fmt"
 
-	_ "github.com/lib/pq"
-	"github.com/wattam/shoe-store-API/models"
+	"github.com/wattam/golang-shoe-store-api/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-const PostgresDriver = "postgres"
+const host = "localhost"
+const port = "5432"
+const user = "postgres"
+const password = "postgres123"
+const dbName = "golang-shoe-store"
 
-const User = "postgres"
+var DataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
 
-const Host = "localhost"
+var Db *gorm.DB
 
-const Port = "5432"
-
-const Password = "postgres123"
-
-const DbName = "ShoeStore"
-
-var DataSourceName = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", Host, Port, User, Password, DbName)
-
-var db *gorm.DB
-
-func CreateDatabase() {
+func ConnectDatabase() {
 
 	dbGorm, err := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
 	if err != nil {
@@ -34,21 +27,17 @@ func CreateDatabase() {
 		fmt.Println("DATABASE CONNECTED!")
 	}
 
-	db = dbGorm
+	Db = dbGorm
 
 	RunMigrations()
 }
 
-func GetDatabase() *gorm.DB {
-	return db
-}
-
 func RunMigrations() {
-	db.AutoMigrate(models.Shoe{})
+	Db.AutoMigrate(models.Shoe{})
 }
 
-func CloseConnection() {
-	config, _ := db.DB()
+func DisconnectDatabase() {
+	config, _ := Db.DB()
 
 	config.Close()
 }
