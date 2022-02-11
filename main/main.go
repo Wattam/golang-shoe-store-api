@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/wattam/golang-shoe-store-api/controller"
 	"github.com/wattam/golang-shoe-store-api/database"
-	"github.com/wattam/golang-shoe-store-api/handlers/shoe_handlers"
 )
 
 func main() {
@@ -13,13 +13,16 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	shoes := r.Group("shoes")
+	v1 := r.Group("/api/v1")
 	{
-		shoes.GET("/get", shoe_handlers.GetAll)
-		shoes.GET("/:id", shoe_handlers.Get)
-		shoes.POST("/post", shoe_handlers.Post)
-		shoes.PUT("/put", shoe_handlers.Put)
-		shoes.DELETE("/:id", shoe_handlers.Delete)
+		shoes := v1.Group("shoes")
+		{
+			shoes.GET("/get", controller.GetAllShoes)
+			shoes.GET("/:id", controller.GetShoe)
+			shoes.POST("/post", controller.PostShoe)
+			shoes.PUT("/put", controller.PutShoe)
+			shoes.DELETE("/:id", controller.DeleteShoe)
+		}
 	}
 
 	r.Run()
