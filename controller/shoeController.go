@@ -50,7 +50,7 @@ func Store(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, shoe)
+	c.JSON(http.StatusCreated, shoe)
 }
 
 func Update(c *gin.Context) {
