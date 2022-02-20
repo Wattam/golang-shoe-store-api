@@ -2,48 +2,43 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/wattam/golang-shoe-store-api/database"
 	"github.com/wattam/golang-shoe-store-api/model"
 )
 
-func GetAllShoes(c *gin.Context) {
+func Index(c *gin.Context) {
 
 	shoes := []model.Shoe{}
-
 	database.Db.Find(&shoes)
 
 	if len(shoes) == 0 {
-		c.Status(http.StatusNoContent)
+		c.Status(http.StatusNotFound)
 		return
 	}
 
 	c.JSON(http.StatusOK, shoes)
 }
 
-func GetShoe(c *gin.Context) {
+func Show(c *gin.Context) {
 
 	id := c.Param("id")
-
 	shoe := model.Shoe{}
 
 	err := database.Db.First(&shoe, id).Error
-
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": err.Error(),
-		})
+		c.Status(http.StatusNotFound)
 		return
 	}
 
 	c.JSON(http.StatusOK, shoe)
 }
 
-func PostShoe(c *gin.Context) {
+func Store(c *gin.Context) {
 
 	shoe := model.Shoe{}
-
 	c.ShouldBindJSON(&shoe)
 
 	err := database.Db.Create(&shoe).Error
@@ -58,14 +53,14 @@ func PostShoe(c *gin.Context) {
 	c.JSON(http.StatusOK, shoe)
 }
 
-func PutShoe(c *gin.Context) {
+func Update(c *gin.Context) {
 
 	shoe := model.Shoe{}
-
 	c.ShouldBindJSON(&shoe)
+	shoe.ID, _ = strconv.Atoi(c.Param("id"))
 
 	if database.Db.First(&model.Shoe{}, shoe.ID).Error != nil {
-		c.Status(http.StatusNoContent)
+		c.Status(http.StatusNotFound)
 		return
 	}
 
@@ -81,11 +76,15 @@ func PutShoe(c *gin.Context) {
 	c.JSON(http.StatusOK, shoe)
 }
 
-func DeleteShoe(c *gin.Context) {
+func Delete(c *gin.Context) {
 
 	id := c.Param("id")
 
-	database.Db.Delete(&model.Shoe{}, id)
+	if database.Db.First(&model.Shoe{}, id).Error != nil {
+		c.Status(http.StatusNotFound)
+		return
+	}
 
+	database.Db.Delete(&model.Shoe{}, id)
 	c.Status(http.StatusNoContent)
 }

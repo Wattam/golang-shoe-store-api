@@ -17,11 +17,11 @@ func main() {
 	{
 		shoes := v1.Group("shoes")
 		{
-			shoes.GET("/get", controller.GetAllShoes)
-			shoes.GET("/:id", controller.GetShoe)
-			shoes.POST("/post", controller.PostShoe)
-			shoes.PUT("/put", controller.PutShoe)
-			shoes.DELETE("/:id", controller.DeleteShoe)
+			shoes.GET("", controller.Index)
+			shoes.GET("/:id", controller.Show)
+			shoes.POST("", controller.Store)
+			shoes.PUT("/:id", controller.Update)
+			shoes.DELETE("/:id", controller.Delete)
 		}
 	}
 
